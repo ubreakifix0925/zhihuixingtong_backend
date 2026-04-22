@@ -21,6 +21,7 @@ class QuestionBank(Base):
     # 题目内容
     module = Column(String(50), nullable=False)      # 模块名称（如“古诗词”）
     question = Column(Text, nullable=False)          # 题干
+    question_type = Column(String(10), nullable=False)  
     type = Column(String(10), nullable=False)  # choice / fill
     options = Column(JSON, nullable=True)            # 选项列表
     answer = Column(String(255), nullable=False)     # 标准答案
