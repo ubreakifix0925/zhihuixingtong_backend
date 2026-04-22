@@ -30,6 +30,21 @@ class DiagnosisReportResponse(BaseModel):
     strong_modules: List[str]
     recommended_first_lesson: str
 
+class DiagnosisQuestionsParams(BaseModel):
+    grade: str
+    subject: str
+    modules: List[str]    # 知识点数组
+    hard: str
+    count: int = 10
+
+class DiagnosisQuestionItem(BaseModel):
+    module: str                    # 主模块名
+    modules: Optional[List[str]] = []   # 关联知识点标签
+    question: str
+    type: str
+    options: Optional[List[str]] = None
+    answer: str
+
 # ---------- 教案 ----------
 class LessonPlanResponse(BaseModel):
     plan_id: int

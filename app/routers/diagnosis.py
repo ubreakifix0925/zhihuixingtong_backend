@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import List, Optional
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app import schemas, models
 from app.database import get_db
@@ -12,9 +13,9 @@ router = APIRouter(prefix="/api/diagnosis", tags=["diagnosis"])
 async def get_diagnosis_questions(
     grade: str, 
     subject: str, 
-    point: str, 
     hard: str, 
     count: int, 
+    modules: List[str] = Query(...),   # 接收多个知识点
     db: Session = Depends(get_db)
     ):
     """获取诊断测试题"""
@@ -22,7 +23,7 @@ async def get_diagnosis_questions(
     questions = await service.get_or_generate_questions(
         grade=grade,
         subject=subject,
-        point=point,
+        modules=modules,
         hard=hard,
         required_count=count
     )

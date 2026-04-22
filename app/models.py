@@ -16,7 +16,7 @@ class QuestionBank(Base):
     # 题目标签（用于筛选）
     grade = Column(String(20), nullable=False, index=True)      # 大学/高中/初中/小学
     subject = Column(String(20), nullable=False, index=True)    # 数学/语文/无机化学等
-    point = Column(String(50), nullable=True, index=True)  # 知识点
+    modules = Column(JSON, nullable=True)  # 知识点
     hard = Column(String(10), nullable=True, index=True)  # 简单/中等/困难
     # 题目内容
     module = Column(String(50), nullable=False)      # 模块名称（如“古诗词”）

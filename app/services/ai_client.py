@@ -61,11 +61,25 @@ class AIClient:
                 pass
         return {}
 
-    async def generate_diagnosis_questions(self, grade: str, subject: str, point: str, hard: str) -> List[Dict[str, Any]]:
+    async def generate_diagnosis_questions(
+            self, 
+            grade: str, 
+            subject: str, 
+            modules: List[str], 
+            hard: str, 
+            count: int = 5
+    ) -> List[Dict[str, Any]]:
         if self.use_mock:
             return generate_mock_diagnosis_questions(grade, subject)
+        modules_str = "、".join(modules)
         query = f""
-        inputs = {"subject": subject, "grade": grade, "point": point, "hard": hard}
+        inputs = {
+            "subject": subject, 
+            "grade": grade, 
+            "modules": json.dumps(modules, ensure_ascii=False), 
+            "hard": hard, 
+            "test_num": str(count)
+        }
         resp = await self._call_jiuwen_chat(query, inputs, user=f"student_{hash(subject)}")
         if not resp:
             raise Exception("Failed to call AI service")
