@@ -72,8 +72,6 @@ git clone https://github.com/ubreakifix0925/zhihuixingtong_backend.git
 cd zhihuixingtong_backend
 ```
 
-> **提示**：如已配置 SSH 密钥，也可使用 `git clone git@github.com:ubreakifix0925/zhihuixingtong_backend.git`
-
 ### 2.2 获取最新更新
 
 每次开始工作前，请先拉取团队其他成员的最新提交：
@@ -234,9 +232,9 @@ DATABASE_URL=sqlite:///./zhijiao.db
 USE_MOCK_DATA=True
 
 # 若需真实调用九问 API，请填写以下配置
-JIUWEN_API_BASE_URL=http://jiuwen-api.vmic.xyz/v1
+JIUWEN_API_BASE_URL=https://jiuwen.vivo.com.cn/v1
 JIUWEN_API_KEY=your_api_key_here
-AI_REQUEST_TIMEOUT=60
+AI_REQUEST_TIMEOUT=180
 ```
 
 ### 5.4 启动服务
