@@ -67,7 +67,18 @@ backend/
 └── README.md                   # 本文件
 ```
 
----
+## 🌐 GitHub 协作指南
+
+项目已托管在 GitHub，团队成员可通过以下步骤获取代码并保持同步。
+
+### 首次获取项目（克隆仓库）
+
+```bash
+# 克隆仓库到本地
+git clone https://github.com/ubreakifix0925/zhihuixingtong_backend.git
+cd zhihuixingtong_backend
+```
+
 
 ## 🚀 快速开始
 
