@@ -37,8 +37,7 @@ class DiagnosisQuestionsParams(BaseModel):
     hard: str
     count: int = 10
 
-class DiagnosisQuestionItem(BaseModel):
-    module: str                    # 主模块名
+class DiagnosisQuestionItem(BaseModel):                   # 主模块名
     modules: Optional[List[str]] = []   # 关联知识点标签
     question: str
     type: str

@@ -63,7 +63,6 @@ class QuestionBankService:
                 subject=tags["subject"],
                 modules=tags.get("modules", []),
                 hard=tags.get("hard", ""),
-                module=q.get("module", ""),
                 question=q["question"],
                 question_type=q["type"],
                 options=q.get("options"),

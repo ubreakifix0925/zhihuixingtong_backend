@@ -51,11 +51,11 @@ def parse_diagnosis_response(raw_response: dict) -> List[Dict[str, Any]]:
     return questions
 
 def parse_single_question(q_raw: dict) -> Optional[Dict[str, Any]]:
-    module = q_raw.get("module", "")
     question_text = q_raw.get("question", "")
     q_type_raw = q_raw.get("type", "").strip()
     options_raw = q_raw.get("options", "")
     answer = q_raw.get("answer", "")
+    
     # 标准化题型
     if "选择" in q_type_raw:
         q_type = "choice"
@@ -63,7 +63,7 @@ def parse_single_question(q_raw: dict) -> Optional[Dict[str, Any]]:
         q_type = "fill"
     else:
         q_type = "choice"
-    # 解析选项
+    
     options = None
     if q_type == "choice":
         if isinstance(options_raw, str):
@@ -77,8 +77,14 @@ def parse_single_question(q_raw: dict) -> Optional[Dict[str, Any]]:
             options = cleaned_opts
         elif isinstance(options_raw, list):
             options = options_raw
+
+    # 确保 modules 字段存在
+    modules = q_raw.get("modules", [])
+    if not isinstance(modules, list):
+        modules = []
+
     return {
-        "module": module,
+        "modules": modules,
         "question": question_text,
         "type": q_type,
         "options": options,
