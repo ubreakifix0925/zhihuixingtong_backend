@@ -26,7 +26,7 @@ def generate_mock_report_from_scores(student_id: int, modules_scores: Dict[str, 
         "weak_modules": weak_modules,
         "strong_modules": strong_modules,
         "recommended_first_lesson": weak_modules[0] if weak_modules else "综合复习"
-    
+    }
 def generate_mock_diagnosis_questions(education: str, subject: str) -> List[Dict]:
     """返回诊断题目Mock数据（已解析为标准格式）"""
     return parse_diagnosis_response(MOCK_DIAGNOSIS_RAW_RESPONSE)
