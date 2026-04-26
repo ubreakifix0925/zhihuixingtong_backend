@@ -86,18 +86,34 @@ class AIClient:
         raw_json = self._extract_json_from_answer(resp.get("answer", ""))
         return parse_diagnosis_response(raw_json)
 
-    async def generate_diagnosis_report(self, student_id: int, answers: List[Dict[str, Any]]) -> Dict[str, Any]:
+    async def generate_diagnosis_report(self, student_id: int, modules_scores: Dict[str, Any]) -> Dict[str, Any]:
+        # Mock 模式
         if self.use_mock:
-            report = calculate_mock_diagnosis_result(answers)
-            plan = generate_mock_lesson_plan(student_id, report)
-            return {"diagnosis_report": report, "lesson_plan": plan}
-        answers_json = json.dumps(answers, ensure_ascii=False)
-        query = f"学生诊断答题结果如下：\n{answers_json}\n请根据答题情况生成诊断报告和个性化教案。输出格式必须为严格的 JSON：{{\"diagnosis_report\": {{\"diagnosis_summary\": \"...\", \"radar_data\": {{...}}, \"weak_modules\": [...], \"strong_modules\": [...], \"recommended_first_lesson\": \"...\"}}, \"lesson_plan\": {{...}}}}"
-        inputs = {"student_id": str(student_id), "answers": answers_json}
-        resp = await self._call_jiuwen_chat(query, inputs, user=f"student_{student_id}")
-        if not resp:
-            raise Exception("Failed to call AI service")
-        return self._extract_json_from_answer(resp.get("answer", ""))
+            from app.services.mock_service import generate_mock_report_from_scores
+            report = generate_mock_report_from_scores(student_id, modules_scores)
+            lesson_plan = generate_mock_lesson_plan(student_id, {"recommended_first_lesson": report.get("recommended_first_lesson", "基础知识")})
+            return {
+                "diagnosis_report": report,
+                "lesson_plan": lesson_plan
+            }
+
+        # 真实模式
+        scores_json = json.dumps(modules_scores, ensure_ascii=False)
+        query = f"学生模块得分：{scores_json}\n请生成个性化诊断报告和教案。输出格式为 JSON：{{\"diagnosis_report\": {{...}}, \"lesson_plan\": {{...}}}}"
+        inputs = {"scores": scores_json, "student_id": str(student_id)}
+        try:
+            resp = await self._call_jiuwen_chat(query, inputs, user=f"student_{student_id}")
+            if not resp:
+                raise Exception("AI service returned empty response")
+            result = self._extract_json_from_answer(resp.get("answer", ""))
+            # 如果 result 为空，使用 Mock 兜底
+            if not result:
+                return await self.generate_diagnosis_report(student_id, modules_scores)
+            return result
+        except Exception as e:
+            # 真实调用失败时，降级为 Mock
+            print(f"AI call failed: {e}, falling back to mock")
+            return await self.generate_diagnosis_report(student_id, modules_scores)
 
     async def generate_resource_for_segment(self, segment: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         if self.use_mock:

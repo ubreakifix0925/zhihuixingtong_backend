@@ -36,6 +36,20 @@ class DiagnosisResult(Base):
     strong_points = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class DiagnosisAnswerDetail(Base):
+    __tablename__ = "diagnosis_answer_detail"
+    id = Column(Integer, primary_key=True, index=True)
+    diagnosis_result_id = Column(Integer, ForeignKey("diagnosis_result.id"), nullable=False)
+    question_id = Column(Integer, nullable=False)          # 对应 question_bank.id
+    question_text = Column(Text, nullable=False)
+    question_type = Column(String(10), nullable=False)
+    options = Column(JSON, nullable=True)
+    standard_answer = Column(String(255), nullable=False)
+    student_answer = Column(String(255), nullable=False)
+    is_correct = Column(Boolean, default=False)
+    modules = Column(JSON, nullable=True)                  # 该题关联的标签数组
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 class LessonPlan(Base):
     __tablename__ = "lesson_plan"
     id = Column(Integer, primary_key=True, index=True)

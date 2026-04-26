@@ -13,6 +13,20 @@ MOCK_DIAGNOSIS_RAW_RESPONSE = {
     ]
 }
 
+def generate_mock_report_from_scores(student_id: int, modules_scores: Dict[str, Any]) -> Dict[str, Any]:
+    radar_data = modules_scores.get("radar_data", {})
+    weak_modules = modules_scores.get("weak_modules", [])
+    strong_modules = modules_scores.get("strong_modules", [])
+    weak_str = "、".join(weak_modules) if weak_modules else "无"
+    strong_str = "、".join(strong_modules) if strong_modules else "无"
+    diagnosis_summary = f"诊断结果：薄弱模块 - {weak_str}；优势模块 - {strong_str}。建议针对薄弱模块进行强化学习。"
+    return {
+        "diagnosis_summary": diagnosis_summary,
+        "radar_data": radar_data,
+        "weak_modules": weak_modules,
+        "strong_modules": strong_modules,
+        "recommended_first_lesson": weak_modules[0] if weak_modules else "综合复习"
+    
 def generate_mock_diagnosis_questions(education: str, subject: str) -> List[Dict]:
     """返回诊断题目Mock数据（已解析为标准格式）"""
     return parse_diagnosis_response(MOCK_DIAGNOSIS_RAW_RESPONSE)

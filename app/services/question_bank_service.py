@@ -74,6 +74,8 @@ class QuestionBankService:
         self.db.commit()
         return saved_count
 
+    def get_question_by_id(self, question_id: int) -> Optional[models.QuestionBank]:
+        return self.db.query(models.QuestionBank).filter(models.QuestionBank.id == question_id).first()
     async def get_or_generate_questions(
         self,
         grade: str,
@@ -93,7 +95,7 @@ class QuestionBankService:
         local_list = []
         for q in local_questions:
             local_list.append({
-                "module": q.module,
+                "id": q.id,
                 "modules": q.modules or [],
                 "question": q.question,
                 "type": q.question_type,

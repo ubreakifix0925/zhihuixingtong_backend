@@ -44,6 +44,15 @@ class DiagnosisQuestionItem(BaseModel):                   # 主模块名
     options: Optional[List[str]] = None
     answer: str
 
+# ---------- 提交诊断答案 ----------
+class AnswerSubmitItem(BaseModel):
+    question_id: int            # 题库题目ID
+    student_answer: str         # 学生答案
+
+class DiagnosisAnswerSubmit(BaseModel):
+    student_id: int
+    answers: List[AnswerSubmitItem]
+
 # ---------- 教案 ----------
 class LessonPlanResponse(BaseModel):
     plan_id: int
